@@ -1,5 +1,3 @@
-.
-
 📊 Customer Delinquency Analysis & Power BI Dashboard
 📌 Project Overview
 
