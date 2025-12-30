@@ -1,72 +1,105 @@
 📊 Customer Delinquency Analysis & Power BI Dashboard
 📌 Project Overview
 
-This project focuses on analyzing customer delinquency behavior using Python for data preprocessing and Power BI for interactive visualization. The objective is to identify high-risk customers, analyze payment patterns, and provide executive-level insights to support credit risk decision-making.
+This project analyzes customer delinquency behavior by combining Excel for data cleaning, Python for feature engineering, and Power BI for visualization. The goal is to identify high-risk customers, understand delinquency drivers, and present insights through an interactive dashboard for business and risk teams.
 
 🎯 Objectives
 
-Clean and preprocess delinquency data using Python
+Clean and standardize raw customer credit data
 
-Transform categorical monthly payment data for trend analysis
+Engineer meaningful risk indicators using Python
 
-Identify key risk indicators such as missed payments and delinquency rate
+Analyze delinquency trends and customer risk segments
 
-Build an interactive Power BI dashboard for business users
+Build an executive-level Power BI dashboard for decision-making
 
 🧰 Tools & Technologies
 
-Python: Pandas, NumPy
+Excel: Data cleaning & missing value treatment
 
-Power BI: Data Modeling, Power Query, DAX, Interactive Visuals
+Python: Pandas, NumPy (feature engineering)
+
+Power BI: Power Query, DAX, Interactive Visualizations
 
 Data Format: CSV
 
 🗂 Dataset Description
 
-The dataset contains customer-level credit and payment information, including:
+The dataset includes customer-level credit and payment attributes such as:
 
-Demographics (Age, Location, Employment Status)
+Demographics: Age, Location, Employment Status
 
-Financial metrics (Income, Loan Balance, DTI Ratio, Credit Utilization)
+Financials: Income, Loan Balance, Credit Utilization, DTI Ratio
 
-Credit behavior (Missed Payments, Delinquent Account)
+Credit Behavior: Missed Payments, Delinquent Account
 
-Monthly payment status (Month_1 to Month_6)
+Monthly Payment Status: Month_1 to Month_6 (categorical)
 
-Risk indicators (Delinquency Rate, Risk Band)
+Risk Metrics: Delinquency Rate, Risk Band, Utilization & DTI Flags
 
 🔄 Project Workflow
-1️⃣ Data Cleaning & Preparation (Python)
+1️⃣ Data Cleaning (Excel)
 
-Loaded raw delinquency dataset using Pandas
+Removed inconsistencies and formatting issues
 
-Handled incorrect data types (converted income and loan fields)
+Handled missing values using median imputation for:
 
-Verified missing values and data consistency
+Income
 
-Exported the cleaned dataset as a CSV file for Power BI
+Credit Score
+
+Loan Balance
+
+Ensured correct data types for numerical analysis
+
+Exported cleaned data as CSV for further processing
+
+2️⃣ Feature Engineering (Python)
+
+Python was used to derive new calculated columns that enhance risk analysis.
+
+Key transformations include:
+
+Delinquency Rate calculation
+
+Delinquency Risk Band classification (Low / Medium / High)
+
+High Credit Utilization Flag
+
+High Debt-to-Income (DTI) Flag
+
+Loan Size Categorization (Small / Medium / Large)
 
 import pandas as pd
 
-df = pd.read_csv("raw_delinquency_data.csv")
+df = pd.read_csv("cleaned_delinquency_data.csv")
 
-# Basic cleaning
-df['Income'] = df['Income'].str.replace(',', '').astype(float)
-df.to_csv("cleaned_delinquency_data.csv", index=False)
+df['Delinquency_Rate'] = df['Missed_Payments'] / df['Account_Tenure']
 
-2️⃣ Data Transformation (Power BI – Power Query)
+df['High_Utilization_Flag'] = (df['Credit_Utilization'] > 0.7).astype(int)
+df['High_DTI_Flag'] = (df['Debt_to_Income_Ratio'] > 0.4).astype(int)
 
-Imported cleaned CSV into Power BI
+df['Delinquency_Risk_Band'] = pd.cut(
+    df['Delinquency_Rate'],
+    bins=[-1, 0.2, 0.5, 1],
+    labels=['Low', 'Medium', 'High']
+)
+
+df.to_csv("final_delinquency_data.csv", index=False)
+
+3️⃣ Data Transformation (Power BI)
+
+Imported the final CSV file into Power BI
 
 Unpivoted categorical monthly columns (Month_1 → Month_6)
 
-Converted data into a normalized format for time-series analysis
+Created a normalized structure for trend analysis
 
-Created calculated columns and measures for analysis
+Built relationships and optimized data model
 
-3️⃣ DAX Measures Created
+4️⃣ DAX Measures & KPIs
 
-Key metrics calculated using DAX:
+Key measures created using DAX:
 
 Total Customers
 
@@ -78,15 +111,14 @@ Monthly Delinquency Rate
 
 High-Risk Customer Count
 
-These measures dynamically respond to filters and slicers.
+Average Credit Score (High Risk)
 
-4️⃣ Dashboard Visualizations
+These measures dynamically respond to slicers and filters.
 
-The Power BI dashboard includes:
+📊 Dashboard Visualizations
+🔹 Customer Profile
 
-🔹 Customer Demographics
-
-Age and income distribution
+Age & income distribution
 
 Employment status by location
 
@@ -94,13 +126,13 @@ Employment status by location
 
 Credit score distribution
 
-Missed payments vs delinquency rate (scatter plot)
+Missed payments vs delinquency rate
 
 Credit utilization impact on risk
 
 🔹 Temporal Analysis
 
-Monthly delinquency trend (line chart)
+Monthly delinquency trends
 
 Missed payments by month
 
@@ -108,32 +140,32 @@ Missed payments by month
 
 Risk band distribution
 
-High-risk customers by location and employment
+High-risk customers by location and employment status
 
-KPI cards for executive monitoring
+KPI cards for management monitoring
 
 📈 Key Insights
 
-Higher missed payments strongly correlate with increased delinquency rate
+Customers with high credit utilization and DTI show higher delinquency risk
 
-Customers with high DTI and credit utilization show elevated risk
+Missed payments strongly correlate with delinquency rate
 
-Certain locations and employment groups contribute more to high-risk segments
+Specific customer segments contribute disproportionately to high-risk bands
 
-Delinquency trends vary across months, highlighting early warning signals
+Monthly trend analysis highlights early warning signals
 
 📌 Business Impact
 
-Helps financial institutions proactively identify risky customers
+Enables proactive identification of risky customers
 
-Supports credit risk monitoring and decision-making
+Supports data-driven credit risk decisions
 
-Provides an executive-ready dashboard for stakeholders
+Provides an executive-ready reporting solution
 
 🚀 Future Enhancements
 
 Integrate machine learning models for delinquency prediction
 
-Automate data refresh using APIs
+Automate data ingestion and refresh
 
-Deploy Power BI dashboard to Power BI Service with scheduled refresh
+Deploy dashboard to Power BI Service with scheduled refresh
